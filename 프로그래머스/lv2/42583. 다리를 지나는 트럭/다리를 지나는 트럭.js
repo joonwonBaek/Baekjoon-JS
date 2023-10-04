@@ -3,21 +3,17 @@ function solution(bridge_length, weight, truck_weights) {
     let cnt = 0;
     let bridge = new Array(bridge_length).fill(0);
     let bridge_sum = 0;
-    //첫번째 요소 넣기
-    cnt ++;
-    bridge.shift();
-    bridge_sum += truck_weights[0];
-    bridge.push(truck_weights.shift());
     
-    while(bridge_sum > 0){ //현재 다리위의 차 무게합
+    while(truck_weights.length > 0) {
         cnt ++;
         bridge_sum -= bridge.shift();
-        if(truck_weights.length > 0 && bridge_sum + truck_weights[0] <= weight) {
+        if(bridge_sum + truck_weights[0] <= weight) {
             bridge_sum += truck_weights[0];
             bridge.push(truck_weights.shift());
-        } else {
+        }
+        else {
             bridge.push(0);
-        }   
+        }
     }
-    return cnt;
+    return cnt+bridge.length;
 }
