@@ -1,22 +1,30 @@
-const solve = (N, M, arr) => {
-  const permutation = [];
-  const output = [];
-  const recursion = () => {
-    if (permutation.length === M) {
-      output.push(permutation.join(' '));
+const { log } = require("console");
+let fs = require("fs");
+let input = fs.readFileSync("/dev/stdin").toString().split("\n");
+
+let [n, m] = input[0].split(" ").map(Number);
+let arr = input[1].split(" ").map(Number);
+
+arr.sort((a, b) => a - b);
+
+const solution = (arr, m) => {
+  let answer = [];
+  let temp = [];
+
+  const dfs = (depth) => {
+    if (depth === m) {
+      answer.push(temp.join(" "));
     } else {
       for (const i of arr) {
-        if (permutation[permutation.length-1] > i) continue;
-        permutation.push(i);
-        recursion();
-        permutation.pop(i);
+        if (temp[temp.length - 1] > i) continue;
+        temp.push(i);
+        dfs(depth + 1);
+        temp.pop();
       }
     }
   };
-  recursion();
-  console.log(output.join('\n'));
+  dfs(0);
+  console.log(answer.join("\n"));
 };
 
-const [ N, M, ...arr ] = require('fs').readFileSync('/dev/stdin').toString().trim().split(/\s+/).map(v => +v);
-arr.sort((a, b) => a - b);
-solve(N, M, arr);
+solution(arr, m);
