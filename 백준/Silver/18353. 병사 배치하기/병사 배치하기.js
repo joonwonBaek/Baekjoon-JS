@@ -25,7 +25,7 @@ for(x of arr){
     }
     else{
         let index = lowerBound(arr1, x, 0, arr1.length);
-        arr1[index] = x;
+        arr1[index] = x; 
     }
 }
 
