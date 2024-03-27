@@ -1,44 +1,36 @@
-const { log } = require("console");
-let fs = require("fs");
-let input = fs.readFileSync("/dev/stdin").toString().split("\n");
+const fs = require("fs");
+const filePath = process.platform === "linux" ? "/dev/stdin" : "ex.txt";
+const input = fs.readFileSync(filePath).toString().trim().split("\n");
 
-let n = Number(input[0]);
-let stack = [];
-let top = 0;
-let answer = "";
+const n = Number(input[0]);
+const stack = [];
+const answer = [];
+
 for (let i = 1; i <= n; i++) {
-  const command = input[i].split(" ")[0].trim();
-  let result = "";
-  switch (command) {
-    case "push":
-      const pushItem = input[i].split(" ")[1].trim();
-      stack[top++] = pushItem;
-      break;
-    case "pop":
-      if (top) {
-        top -= 1;
-        result = stack.splice(-1);
-        answer += result + " ";
-      } else {
-        result = -1;
-        answer += result + " ";
-      }
-      break;
-    case "top":
-      result = top ? stack[top - 1] : -1;
-      answer += result + " ";
-      break;
-    case "empty":
-      result = top ? 0 : 1;
-      answer += result + " ";
-      break;
-    case "size":
-      result = top;
-      answer += result + " ";
-      break;
-    default:
-      break;
+  const command = input[i].trim().split(" ");
+  if (command[0] === "push") {
+    stack.push(Number(command[1]));
+  } else if (command[0] === "pop") {
+    if (stack.length === 0) {
+      answer.push(-1);
+    } else {
+      answer.push(stack.pop());
+    }
+  } else if (command[0] === "size") {
+    answer.push(stack.length);
+  } else if (command[0] === "empty") {
+    if (stack.length === 0) {
+      answer.push(1);
+    } else {
+      answer.push(0);
+    }
+  } else {
+    if (stack.length === 0) {
+      answer.push(-1);
+    } else {
+      answer.push(stack[stack.length - 1]);
+    }
   }
 }
 
-console.log(answer);
+console.log(answer.join("\n"));
