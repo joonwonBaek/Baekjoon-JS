@@ -1,28 +1,22 @@
-const { log } = require("console");
-let fs = require("fs");
-let input = fs.readFileSync("/dev/stdin").toString().split("\n");
+const fs = require("fs");
+const filePath = process.platform === "linux" ? "/dev/stdin" : "ex.txt";
+const input = fs.readFileSync(filePath).toString().trim().split("\n");
 
-let t = Number(input[0]);
+const t = Number(input[0]);
 
 for (let i = 1; i <= t; i++) {
-  let stack = [];
-  arr = input[i].trim().split("");
-  for (let k = 0; k < arr.length; k++) {
+  let arr = input[i].trim().split("");
+  const stack = [];
+  for (let j = 0; j < arr.length; j++) {
     if (stack.length === 0) {
-      stack.push(arr[k]);
+      stack.push(arr[j]);
     } else {
-      if (stack[stack.length - 1] === arr[k]) {
-        stack.push(arr[k]);
+      if (stack[stack.length - 1] === "(" && arr[j] === ")") {
+        stack.pop();
       } else {
-        if (stack[stack.length - 1] === "(" && arr[k] === ")") {
-          stack.pop();
-        }
+        stack.push(arr[j]);
       }
     }
   }
-  if (stack.length === 0) {
-    console.log("YES");
-  } else {
-    console.log("NO");
-  }
+  console.log(stack.length === 0 ? "YES" : "NO");
 }
