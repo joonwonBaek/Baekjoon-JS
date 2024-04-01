@@ -2,11 +2,19 @@ const fs = require("fs");
 const filePath = process.platform === "linux" ? "/dev/stdin" : "ex.txt";
 const input = fs.readFileSync(filePath).toString().trim().split("\n");
 
-const [a, b, n] = input[0].split(" ");
+// A-H열을 숫자로 라벨링
+const pos = {
+  A: 1,
+  B: 2,
+  C: 3,
+  D: 4,
+  E: 5,
+  F: 6,
+  G: 7,
+  H: 8,
+};
 
-let king = a.trim().split("");
-let stone = b.trim().split("");
-
+// 방향 정의
 const move = {
   R: [1, 0],
   L: [-1, 0],
@@ -18,36 +26,45 @@ const move = {
   LB: [-1, -1],
 };
 
-let king1 = king[0].charCodeAt();
-let king2 = Number(king[1]);
+const [a, b, n] = input[0].split(" ");
 
-let stone1 = stone[0].charCodeAt();
-let stone2 = Number(stone[1]);
+let [king_x, king_y] = a.split("");
+let [stone_x, stone_y] = b.split("");
 
-for (let i = 1; i <= n; i++) {
-  let arr = input[i].trim();
-  const nx = king1 + move[arr][0];
-  const ny = king2 + move[arr][1];
+king_y = Number(king_y);
+stone_y = Number(stone_y);
 
-  if (65 <= nx && nx <= 72 && 0 < ny && ny <= 8) {
-    if (nx === stone1 && ny === stone2) {
-      const sx = stone1 + move[arr][0];
-      const sy = stone2 + move[arr][1];
-      if (65 <= sx && sx <= 72 && 0 < sy && sy <= 8) {
-        [king1, king2] = [nx, ny];
-        [stone1, stone2] = [sx, sy];
+let king = [pos[king_x], king_y];
+let stone = [pos[stone_x], stone_y];
+
+for (let i = 1; i <= Number(n); i++) {
+  const command = input[i].trim();
+  const nx = king[0] + move[command][0];
+  const ny = king[1] + move[command][1];
+
+  if (0 < nx && nx <= 8 && 0 < ny && ny <= 8) {
+    if (nx === stone[0] && ny === stone[1]) {
+      const sx = stone[0] + move[command][0];
+      const sy = stone[1] + move[command][1];
+      if (0 < sx && sx <= 8 && 0 < sy && sy <= 8) {
+        king = [nx, ny];
+        stone = [sx, sy];
       } else {
         continue;
       }
     } else {
-      [king1, king2] = [nx, ny];
+      king = [nx, ny];
     }
   } else {
     continue;
   }
 }
-const answerKing = String.fromCharCode(king1) + String(king2);
-const answerStone = String.fromCharCode(stone1) + String(stone2);
+const result = [];
 
-console.log(answerKing);
-console.log(answerStone);
+const kingAns = Object.keys(pos).find((key) => pos[key] === king[0]);
+const stoneAns = Object.keys(pos).find((key) => pos[key] === stone[0]);
+
+result.push([kingAns, king[1]].join(""));
+result.push([stoneAns, stone[1]].join(""));
+
+console.log(result.join("\n"));
