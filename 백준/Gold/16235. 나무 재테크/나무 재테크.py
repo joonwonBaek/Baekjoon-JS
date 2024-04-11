@@ -7,16 +7,6 @@ tree = [[[] for _ in range(n)] for _ in range(n)]
 dx = [0, -1, -1, -1, 0, 1, 1, 1]
 dy = [-1, -1, 0, 1, 1, 1, 0, -1]
 
-def fall(x, y):
-    global tree
-
-    for i in range(8):
-        nx = x + dx[i]
-        ny = y + dy[i]
-        if 0 <= nx < n and 0 <= ny < n:
-            tree[nx][ny].append(1)
-
-
 for _ in range(m):
     x, y, z = map(int, input().split())
     tree[x-1][y-1].append(z)
@@ -45,7 +35,11 @@ for _ in range(k):
             if tree[i][j]:
                 for d in tree[i][j]:
                     if d % 5 == 0:
-                        fall(i, j)
+                        for k in range(8):
+                            nx = i + dx[k]
+                            ny = j + dy[k]
+                            if 0 <= nx < n and 0 <= ny < n:
+                                tree[nx][ny].append(1)
     # 겨울
     for i in range(n):
         for j in range(n):
