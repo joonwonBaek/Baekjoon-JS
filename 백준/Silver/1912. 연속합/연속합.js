@@ -1,16 +1,16 @@
-const { log } = require("console");
-let fs = require("fs");
-let input = fs.readFileSync("/dev/stdin").toString().split("\n");
+const fs = require("fs");
+const filePath = process.platform === "linux" ? "/dev/stdin" : "ex.txt";
+const input = fs.readFileSync(filePath).toString().trim().split("\n");
 
-let n = Number(input[0]);
-let num_arr = input[1].split(" ").map(Number);
-let max_num = num_arr[0];
-let current_sum = num_arr[0];
+const n = Number(input[0]);
+
+const arr = input[1].split(" ").map(Number);
+
+const dp = new Array(n).fill(-1000);
+
+dp[0] = arr[0];
 
 for (let i = 1; i < n; i++) {
-  current_sum = Math.max(num_arr[i], num_arr[i] + current_sum);
-
-  max_num = Math.max(max_num, current_sum);
+  dp[i] = Math.max(dp[i - 1] + arr[i], arr[i]);
 }
-
-console.log(max_num);
+console.log(Math.max(...dp));
