@@ -1,17 +1,21 @@
-const { log } = require("console");
-let fs = require("fs");
-let input = fs.readFileSync("/dev/stdin").toString().split("\n");
+const fs = require("fs");
+const filePath = process.platform === "linux" ? "/dev/stdin" : "ex.txt";
+const input = fs.readFileSync(filePath).toString().trim().split("\n");
 
-let n = Number(input[0]);
+const n = Number(input[0]);
 
-let arr = input[1].split(" ").map(Number);
+const arr = input[1].split(" ").map(Number);
 
-dp = new Array(n).fill(1);
+const dp = new Array(n).fill(0);
 
-for (let i = 0; i < n; i++) {
+dp[0] = 1;
+
+for (let i = 1; i < n; i++) {
   for (let j = 0; j < i; j++) {
     if (arr[i] > arr[j]) {
       dp[i] = Math.max(dp[i], dp[j] + 1);
+    } else {
+      dp[i] = Math.max(dp[i], 1);
     }
   }
 }
