@@ -8,7 +8,7 @@ for _ in range(t):
     if arr == arr[::-1]:
         answer = 0
     else:
-        while start <= end:
+        while True:
             if arr[start] == arr[end]:
                 start += 1
                 end -= 1
