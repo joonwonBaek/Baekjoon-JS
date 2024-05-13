@@ -1,6 +1,6 @@
 def solution(n, times):
     answer = 1e9
-    start = 1
+    start = min(times)
     end = max(times) * n
     
     while start <= end:
