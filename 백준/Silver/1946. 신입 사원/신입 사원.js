@@ -1,25 +1,33 @@
-const { log } = require('console');
-let fs = require('fs');
-let input = fs.readFileSync('/dev/stdin').toString().split('\n');
+const fs = require("fs");
+const filePath = process.platform === "linux" ? "/dev/stdin" : "ex.txt";
+const input = fs.readFileSync(filePath).toString().trim().split("\n");
 
-let testCase = Number(input[0]);
-let line = 1;
-for(let tc = 0; tc < testCase; tc++){
-    n = Number(input[line]);
-    let arr = [];
-    for(let i = line+1; i<=line+n; i++){
-        let data = input[i].split(' ').map(Number);
-        arr.push(data);
+let cnt = 1;
+const t = Number(input[0]);
+for (let i = 0; i < t; i++) {
+  const n = Number(input[cnt]);
+  const people = [];
+  for (let j = cnt + 1; j < n + cnt + 1; j++) {
+    const arr = input[j].split(" ").map(Number);
+    people.push(arr);
+  }
+
+  people.sort((a, b) => {
+    if (a[0] == b[0]) {
+      return a[1] - b[1];
+    } else {
+      return a[0] - b[0];
     }
-    arr.sort((a,b) => a[0]-b[0]);
-    let cnt=0;
-    let minValue = 100001;
-    for(let [x,y] of arr){
-        if(y <= minValue){
-            cnt+=1;
-            minValue = y;
-        }
+  });
+  let answer = 1;
+  let second = people[0][1];
+  for (let i = 1; i < n; i++) {
+    if (people[i][1] < second) {
+      answer += 1;
+      second = people[i][1];
     }
-    console.log(cnt);
-    line += n+1;
+  }
+
+  console.log(answer);
+  cnt += n + 1;
 }
