@@ -1,28 +1,32 @@
-const { log } = require('console');
-let fs = require('fs');
-let input = fs.readFileSync('/dev/stdin').toString().split('\n');
+const fs = require("fs");
+const filePath = process.platform === "linux" ? "/dev/stdin" : "ex.txt";
+const input = fs.readFileSync(filePath).toString().trim().split("\n");
 
-let [k,n] = input[0].split(" ").map(Number);
-let arr = [];
-for(let i =1; i<=k; i++){
-    arr.push(Number(input[i]))
+const [k, n] = input[0].split(" ").map(Number);
+const tree = [];
+for (let i = 1; i <= k; i++) {
+  const a = Number(input[i]);
+  tree.push(a);
 }
+
 let start = 1;
-let end = Math.max(...arr);
+let end = Math.max(...tree);
+let answer = 0;
 
-let result = 0;
-while(start <= end){
-    let mid = parseInt((start+end)/2);
-    let total = 0;
-    for(x of arr){
-        total += parseInt(x/mid);
-    }
-    if(total < n){ //랜선의 개수가 모자라면 end의 값을 줄인다
-        end = mid-1;
-    }
-    else { //랜선의 개수가 남으면 start 값을 늘린다
-        result = mid;
-        start = mid+1;
-    }
+while (start <= end) {
+  let mid = parseInt((start + end) / 2);
+  let temp = 0;
+
+  for (const t of tree) {
+    temp += parseInt(t / mid);
+  }
+
+  if (temp < n) {
+    end = mid - 1;
+  } else {
+    start = mid + 1;
+    answer = mid;
+  }
 }
-console.log(result);
+
+console.log(answer);
