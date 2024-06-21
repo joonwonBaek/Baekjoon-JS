@@ -1,27 +1,30 @@
-const { log } = require('console');
-let fs = require('fs');
-let input = fs.readFileSync('/dev/stdin').toString().split('\n');
+const fs = require("fs");
+const filePath = process.platform === "linux" ? "/dev/stdin" : "ex.txt";
+const input = fs.readFileSync(filePath).toString().trim().split("\n");
 
-let [n,m] = input[0].split(" ").map(Number);
-let arr = input[1].split(" ").map(Number);
-let start = 1;
-let end = Math.max(...arr);
+const [n, m] = input[0].split(" ").map(Number);
+const tree = input[1].split(" ").map(Number);
 
-let result = 0;
-while(start <= end){
-    let mid = parseInt((start+end)/2);
-    let total = 0;
-    for(x of arr){
-        if(x >= mid){
-            total += (x-mid);
-        }
+let start = 0;
+let end = Math.max(...tree);
+let answer = 0;
+
+while (start <= end) {
+  let mid = parseInt((start + end) / 2);
+  let temp = 0;
+
+  for (const t of tree) {
+    if (t > mid) {
+      temp += t - mid;
     }
-    if(total < m){ //m의 길이보다 짧으면 mid 값을 줄여야 함
-        end = mid-1;
-    }
-    else { //m의 길이보다 길거나 같으면 mid 늘려야 함
-        result = mid;
-        start = mid+1;
-    }
+  }
+
+  if (temp < m) {
+    end = mid - 1;
+  } else {
+    start = mid + 1;
+    answer = mid;
+  }
 }
-console.log(result);
+
+console.log(answer);
