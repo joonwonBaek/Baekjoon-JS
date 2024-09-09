@@ -42,7 +42,7 @@ answer.sort((a, b) => a - b);
 if (answer.length === 0) {
   console.log(-1);
 } else {
-  for (const a of answer) {
-    console.log(a);
-  }
+  answer.sort((a, b) => a - b);
+  const temp = answer.join("\n");
+  console.log(temp);
 }
