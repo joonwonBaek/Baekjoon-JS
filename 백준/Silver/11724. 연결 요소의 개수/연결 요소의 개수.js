@@ -1,34 +1,33 @@
-let fs = require('fs');
-let input = fs.readFileSync('/dev/stdin').toString().split('\n');
+const fs = require("fs");
+const filePath = process.platform === "linux" ? "/dev/stdin" : "ex.txt";
+const input = fs.readFileSync(filePath).toString().trim().split("\n");
 
-const [n,m] = input[0].split(" ").map(Number);
+const [n, m] = input[0].split(" ").map(Number);
+const graph = Array.from({ length: n + 1 }, () => []);
 
+for (let i = 1; i <= m; i++) {
+  const [a, b] = input[i].split(" ").map(Number);
+  graph[a].push(b);
+  graph[b].push(a);
+}
 
-function dfs(visited, graph, i){
-    visited[i] = true;
-    
-    for(const node of graph[i]){
-        if(!visited[node]) {
-            dfs(visited,graph,node);
-        }
+const visited = Array(n + 1).fill(0);
+
+const dfs = (graph, v, visited) => {
+  visited[v] = 1;
+  for (const node of graph[v]) {
+    if (!visited[node]) {
+      dfs(graph, node, visited);
     }
+  }
+};
+
+let count = 0;
+for (let i = 1; i <= n; i++) {
+  if (!visited[i]) {
+    dfs(graph, i, visited);
+    count++;
+  }
 }
 
-const graph = Array.from({length:n+1}, () => []);
-const visited = Array.from({length:n+1}, () => false);
-let cnt = 0;
-
-for(let i=1; i <= m; i++){
-    const [x, y] = input[i].split(" ").map(Number);
-    graph[x].push(y);
-    graph[y].push(x);
-}
-
-for(let j=1; j<=n; j++) {
-    if(!visited[j]){
-        dfs(visited, graph, j);
-        cnt += 1;
-    }
-}
-
-console.log(cnt);
+console.log(count);
