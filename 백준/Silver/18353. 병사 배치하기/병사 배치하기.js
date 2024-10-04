@@ -1,32 +1,19 @@
-const { log } = require('console');
-let fs = require('fs');
-let input = fs.readFileSync('/dev/stdin').toString().split('\n');
+const fs = require("fs");
+const filePath = process.platform === "linux" ? "/dev/stdin" : "ex.txt";
+const input = fs.readFileSync(filePath).toString().trim().split("\n");
 
-function lowerBound(arr, target, start, end){
-    while(start<end){
-        let mid = parseInt((start+end)/2);
-        if(arr[mid]>=target){
-            end = mid;
-        }
-        else{
-            start = mid+1;
-        }
-    }
-    return end;
-}
-let n = Number(input[0]);
-let arr = input[1].split(" ").map(Number);
+const n = Number(input[0]);
+const arr = input[1].split(" ").map(Number);
+const dp = Array(n).fill(1);
+
 arr.reverse();
-let arr1 = [0];
 
-for(x of arr){
-    if(arr1[arr1.length-1] < x){
-        arr1.push(x);
+for (let i = 1; i < n; i++) {
+  for (let j = 0; j < i; j++) {
+    if (arr[j] < arr[i]) {
+      dp[i] = Math.max(dp[i], dp[j] + 1);
     }
-    else{
-        let index = lowerBound(arr1, x, 0, arr1.length);
-        arr1[index] = x; 
-    }
+  }
 }
 
-console.log(n-arr1.length+1);
+console.log(n - Math.max(...dp));
