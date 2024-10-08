@@ -1,36 +1,30 @@
-let fs = require("fs");
-let input = fs.readFileSync("/dev/stdin").toString().split("\n");
+const fs = require("fs");
+const filePath = process.platform === "linux" ? "/dev/stdin" : "ex.txt";
+const input = fs.readFileSync(filePath).toString().trim().split("\n");
 
-let [n, m] = input[0].split(" ").map(Number);
-let visited = new Array(n).fill(false);
-let arr = [];
-for (let i = 1; i <= n; i++) {
-  arr.push(i);
-}
-let selected = [];
-
+const [n, m] = input[0].split(" ").map(Number);
+const visited = Array(n + 1).fill(0);
 let answer = "";
-function dfs(arr, depth, start) {
+
+const dfs = (depth, total, start) => {
   if (depth === m) {
-    let result = [];
-    for (let i of selected) {
-      result.push(arr[i]);
-    }
-    for (let x of result) {
-      answer += x + " ";
-    }
-    answer += "\n";
+    answer += total + "\n";
     return;
   }
 
-  for (let i = start; i < n; i++) {
-    if (visited[i]) continue;
-    selected.push(i);
-    visited[i] = true;
-    dfs(arr, depth + 1, i);
-    selected.pop();
-    visited[i] = false;
+  for (let i = start; i <= n; i++) {
+    if (!visited[i]) {
+      visited[i] = 1;
+      dfs(depth + 1, total + " " + String(i), i);
+      visited[i] = 0;
+    }
   }
+};
+
+for (let i = 1; i <= n; i++) {
+  visited[i] = 1;
+  dfs(1, String(i), i);
+  visited[i] = 0;
 }
-dfs(arr, 0, 0);
+
 console.log(answer);
