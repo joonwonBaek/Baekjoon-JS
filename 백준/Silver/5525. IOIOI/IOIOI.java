@@ -14,19 +14,20 @@ public class Main {
         char s[] = br.readLine().toCharArray();
 
         int cnt = 0;
-        
-        for (int i = 1; i < m - 2*n+1; i++) {
-            if (s[i - 1] == 'I') {
-                boolean flag = true;
-                for (int k = 0; k < n; k++) {
-                    if(s[i+k*2] == 'O' && s[i+k*2+1] == 'I') {
-                        continue;
-                    } else {
-                        flag = false;
-                        break;
-                    }
+        int patternCount = 0;
+        int i = 1;
+
+        while(i<m-1) {
+            if(s[i -1] == 'I' && s[i] == 'O' && s[i+1] == 'I') {
+                patternCount += 1;
+                if(patternCount == n ) {
+                    cnt += 1;
+                    patternCount -= 1;
                 }
-                if(flag) cnt += 1;
+                i += 2;
+            } else {
+                patternCount = 0;
+                i++;
             }
         }
         bw.write(cnt + "\n");
