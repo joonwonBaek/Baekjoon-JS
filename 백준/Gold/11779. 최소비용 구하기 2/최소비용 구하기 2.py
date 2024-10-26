@@ -1,44 +1,46 @@
-import sys
 import heapq
+import sys
+
+input = sys.stdin.readline
+
+INF = sys.maxsize
 
 n = int(input())
 m = int(input())
 
 graph = [[] for _ in range(n+1)]
-visited = [0] * (n+1)
-result = heap = [sys.maxsize]*(n+1)
-parent = [i for i in range(n + 1)]
 for _ in range(m):
     a, b, cost = map(int, input().split())
-    graph[a].append((cost, b))
+    graph[a].append((b, cost))
 
 start, end = map(int, input().split())
+heap = [(start, 0)]
+costs = [INF] * (n+1)
+node = [0] * (n+1)
 
-def dijkstra(start):
-    heap = []
-    heapq.heappush(heap, (0, start))
-    result[start] = 0
-    while heap:
-        cost, city = heapq.heappop(heap)
-        # print(cost, city)
-        if result[city] < cost:
-            continue
-        for ncost, ncity in graph[city]:
-            if result[ncity] > cost + ncost:
-                result[ncity] = cost + ncost
-                heapq.heappush(heap, (result[ncity], ncity))
-                parent[ncity] = city
+while heap:
+    cur_v, cur_cost = heapq.heappop(heap)
+    if cur_cost > costs[cur_v]:
+        continue
 
-dijkstra(start)
-print(result[end])
+    if cur_v == start:
+        costs[cur_v] = 0
 
-temp = []
-idx = end
+    for next_v, next_cost in graph[cur_v]:
+        cost = next_cost + cur_cost
+        if cost < costs[next_v]:
+            costs[next_v] = cost
+            heapq.heappush(heap, (next_v, cost))
+            node[next_v] = cur_v
 
-while True:
-    temp.append(idx)
-    if idx == parent[idx]:
-        break
-    idx = parent[idx]
-print(len(temp))
-print(*reversed(temp))
+temp = end
+answer = []
+while temp:
+    answer.append(temp)
+    temp = node[temp]
+
+answer.reverse()
+
+print(costs[end])
+print(len(answer))
+print(" ".join(map(str, answer)))
