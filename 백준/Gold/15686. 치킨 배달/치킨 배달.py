@@ -1,35 +1,26 @@
 from itertools import combinations
 
-N, M = map(int, input().split())
-
-arr = []
-
-for i in range(N):
-    data = list(map(int, input().split()))
-    arr.append(data)
-
-chicken = []
+n, m = map(int, input().split())
+graph = [list(map(int, input().split())) for _ in range(n)]
 house = []
+chicken = []
+answer = 1e9
 
-for i in range(N):
-    for j in range(N):
-        if arr[i][j] == 1:
+for i in range(n):
+    for j in range(n):
+        if graph[i][j] == 1:
             house.append([i, j])
-        elif arr[i][j] == 2:
+        if graph[i][j] == 2:
             chicken.append([i, j])
 
-# 치킨 집 중에서 m개 뽑는 조합
-combination = list(combinations(chicken, M))
+chickens = combinations(chicken, m)
 
-result = []
-for comb in combination:
-    answer = 0
+for chi in chickens:
+    result = 0;
     for hx, hy in house:
         temp = 1e9
-        for [cx, cy] in comb:
-            temp = min(temp, abs(hx-cx) + abs(hy-cy))
-        answer += temp
-    result.append(answer)
-
-print(min(result))
-
+        for cx, cy in chi:
+            temp = min(temp, abs(hx - cx) + abs(hy - cy))
+        result += temp
+    answer = min(result, answer)
+print(answer)
