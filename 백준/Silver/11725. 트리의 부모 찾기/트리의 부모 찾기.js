@@ -3,26 +3,27 @@ const filePath = process.platform === "linux" ? "/dev/stdin" : "ex.txt";
 const input = fs.readFileSync(filePath).toString().trim().split("\n");
 
 const n = Number(input[0]);
-const tree = Array.from({ length: n + 1 }, () => []);
-const answer = new Array(n + 1).fill(0);
-const visited = new Array(n + 1).fill(0);
-
+const graph = Array.from({ length: n + 1 }, () => []);
+const visited = Array(n + 1).fill(0);
 for (let i = 1; i < n; i++) {
   const [a, b] = input[i].split(" ").map(Number);
-  tree[a].push(b);
-  tree[b].push(a);
+  graph[a].push(b);
+  graph[b].push(a);
 }
 
-const dfs = (start) => {
-  visited[start] = 1;
-  for (const now of tree[start]) {
-    if (visited[now] == 0) {
-      answer[now] = start;
-      dfs(now);
+q = [];
+q.push(1);
+
+while (q.length) {
+  const now = q.shift();
+  for (const next of graph[now]) {
+    if (visited[next] === 0) {
+      visited[next] = now;
+      q.push(next);
     }
   }
-};
+}
 
-dfs(1);
-const temp = answer.slice(2).join("\n");
-console.log(temp);
+for (let i = 2; i <= n; i++) {
+  console.log(visited[i]);
+}
