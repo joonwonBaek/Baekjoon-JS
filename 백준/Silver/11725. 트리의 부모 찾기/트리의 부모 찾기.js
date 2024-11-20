@@ -5,6 +5,7 @@ const input = fs.readFileSync(filePath).toString().trim().split("\n");
 const n = Number(input[0]);
 const graph = Array.from({ length: n + 1 }, () => []);
 const visited = Array(n + 1).fill(0);
+let answer = "";
 for (let i = 1; i < n; i++) {
   const [a, b] = input[i].split(" ").map(Number);
   graph[a].push(b);
@@ -25,5 +26,7 @@ while (q.length) {
 }
 
 for (let i = 2; i <= n; i++) {
-  console.log(visited[i]);
+  answer += String(visited[i]) + "\n";
 }
+
+console.log(answer);
